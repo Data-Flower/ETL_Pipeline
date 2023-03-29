@@ -10,3 +10,20 @@ def send_to_aws_s3_path(data, file_path, accessParams):
 
     # AWS S3에 파일을 저장한다.
     s3.Object(accessParams['aws_s3_bucket_name'], file_path).put(Body=data)
+
+# [x] : SG aws 접속
+def SG_s3_connection(aws_access_key_id, aws_secret_access_key):
+    import boto3
+
+    try:
+        s3 = boto3.client(
+            service_name="s3",
+            region_name="ap-northeast-2",
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+        )
+    except Exception as e:
+        print(e)
+    else:
+        print("s3 bucket connected!") 
+        return s3

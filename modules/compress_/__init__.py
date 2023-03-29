@@ -19,3 +19,14 @@ def compress_data(str_data):
 def compress_dict(dict_data):
     """ dict 데이터를 압축하는 함수 """
     return compress_data(_json_dump_data(dict_data))
+
+# [x] : SG 복호화 함수
+def SG_decrypt(key, data):
+    from cryptography.fernet import Fernet
+    import json
+
+    fernet = Fernet(key)
+    for i in range(len(data)):
+        temp = fernet.decrypt(data[i]['data']).decode('utf-8').replace("'", "\"")
+        data[i]['data'] = json.loads(temp)
+    return data
