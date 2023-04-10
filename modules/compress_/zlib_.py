@@ -5,14 +5,14 @@ def compress_test():
 def decompress_test():
     print('zlib decompress test')
 
-def compress(data):
+def compress(data, compress_level=9):
     """ 데이터를 압축하는 함수 """
     # print(type(data))
     if type(data) == str:
         data = data.encode()
 
     import zlib
-    return zlib.compress(data)
+    return zlib.compress(data, compress_level)
 
 def decompress(data):
     """ 데이터를 압축해제하는 함수 """

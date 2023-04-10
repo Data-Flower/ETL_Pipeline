@@ -5,13 +5,13 @@ def compress_test():
 def decompress_test():
     print('lzma decompress test')
 
-def compress(data):
+def compress(data, compress_level=9):
     """ 데이터를 압축하는 함수 """
     if type(data) == str:
         data = data.encode()
         
     import lzma
-    return lzma.compress(data)
+    return lzma.compress(data, compress_level)
 
 def decompress(data):
     """ 데이터를 압축해제하는 함수 """
