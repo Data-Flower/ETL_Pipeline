@@ -28,30 +28,30 @@ def compress_dict(dict_data):
 
 #region [compress_]
 
-def zlib_compress(data):
+def zlib_compress(data, compress_level=9):
     """ zlib 데이터 압축 """
     import compress_.zlib_ as zlib_
-    return zlib_.compress(data)
+    return zlib_.compress(data, compress_level)
 
 def zlib_decompress(data):
     """ zlib 데이터 압축 해제 """
     import compress_.zlib_ as zlib_
     return zlib_.decompress(data)
 
-def gzip_compress(data):
+def gzip_compress(data, compress_level=9):
     """ gzip 데이터 압축 """
     import compress_.gzip_ as gzip_
-    return gzip_.compress(data)
+    return gzip_.compress(data, compress_level)
 
 def gzip_decompress(data):
     """ gzip 데이터 압축 해제 """
     import compress_.gzip_ as gzip_
     return gzip_.decompress(data)
 
-def lzma_compress(data):
+def lzma_compress(data, compress_level=9):
     """ lzma 데이터 압축 """
     import compress_.lzma_ as lzma_
-    return lzma_.compress(data)
+    return lzma_.compress(data, compress_level)
 
 def lzma_decompress(data):
     """ lzma 데이터 압축 해제 """
@@ -72,14 +72,14 @@ handle_decompress = {
 
 #endregion [compress_]
 
-def compress(data, method='zlib'):
+def compress(data, method='zlib', compress_level=9):
     """ 데이터를 압축하는 함수 """
-    return handle_compress[method](data)
+    return handle_compress[method](data, compress_level)
 
-def compress_test(data, method='zlib'):
+def compress_test(data, method='zlib', compress_level=9):
     """ 데이터를 압축하는 함수 """
     print('기존 데이터 사이즈:', len(data))
-    compressed = compress(data, method)
+    compressed = compress(data, method, compress_level)
     print('압축 결과 사이즈:', len(compressed))
     print('압축률:', len(compressed) / len(data) * 100, '%')
     print('압축 방식:', method)
