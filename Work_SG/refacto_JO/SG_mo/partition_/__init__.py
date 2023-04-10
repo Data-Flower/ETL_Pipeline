@@ -10,4 +10,4 @@ def SG_partitioning(data):
         directory = f'{year}/{month}/{date}.json.gz'
         compressed_data = gzip.compress(json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8'))
 
-        return data, directory
+        return compressed_data, directory
