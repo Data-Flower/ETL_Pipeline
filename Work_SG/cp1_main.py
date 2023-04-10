@@ -6,8 +6,6 @@ import re
 import gzip
 import boto3
 import os
-import schedule
-import time
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -114,7 +112,4 @@ def etl_pipeline():
         Key = save_directory,
     )
 
-schedule.every(5).minutes.do(etl_pipeline)
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+etl_pipeline()
