@@ -7,9 +7,9 @@ from modules import extract_, compress_, load_
 start = time.time()
 AWS_SERVICE_NAME = "s3"
 REGION = "ap-northeast-2"
-AWS_ACCESS_ID = os.environ.get('aws_access_key_id')
-AWS_SECRET_KEY = os.environ.get('aws_secret_access_key')
-AWS_BUCKET_NAME = os.environ.get('aws_s3_bucket_name')
+AWS_ACCESS_ID = 'aws_access_key_id'
+AWS_SECRET_KEY = 'aws_secret_access_key'
+AWS_BUCKET_NAME = 'aws_s3_bucket_name'
 
 def transform(date):
     '''
