@@ -113,7 +113,7 @@ def transform(date):
 
 def etl_pipeline(date):
     data = transform(date)
-    load_.s3_load(data, aws_service_name, region, aws_access_id, aws_secret_key, aws_bucket_name, partitioning_func)
+    load_.s3_load(data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, partitioning_func)
 
 etl_pipeline('20230403')
 # json 원본파일 14mb

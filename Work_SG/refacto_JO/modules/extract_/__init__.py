@@ -12,7 +12,9 @@ def extract(url, params = None):
         return html_dict
     
     # 어떤 형태로 리퀘스트 하며 
-    # param이 없어도 독립실항 가능한 케이스가 있는지 추가 학습 필요
+    # param이 없어도 독립실행 가능한 케이스가 있는지 추가 학습 필요
+    # 일반적으로 json 파일로 바로 받을 수 있음, cp1과 유사
+    # 수정필요
     else:
         response = requests.get(url)
         html = response.text
