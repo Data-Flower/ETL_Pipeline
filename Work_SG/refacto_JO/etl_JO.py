@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from modules import extract_, compress_, load_
-from SG_mo import partition_
 
 start = time.time()
 AWS_SERVICE_NAME = "s3"
@@ -11,7 +10,6 @@ REGION = "ap-northeast-2"
 AWS_ACCESS_ID = os.environ.get('aws_access_key_id')
 AWS_SECRET_KEY = os.environ.get('aws_secret_access_key')
 AWS_BUCKET_NAME = os.environ.get('aws_s3_bucket_name')
-partitioning_func = partition_.SG_partitioning()
 
 def transform(date):
     '''
@@ -113,9 +111,22 @@ def transform(date):
         dict1['data'].append(dict2)
     return dict1
 
+def SG_partitioning(data):
+        import gzip
+        import json
+
+        if len(data['data']) != 0:
+            year = data['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT'][0:4]
+            month = data['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT'][4:6]
+            date = data['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT']
+
+        directory = f'{year}/{month}/{date}.json.gz'
+
+        return data, directory
+
 def etl_pipeline(date):
     data = transform(date)
-    load_.s3_load(data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, partitioning_func)
+    load_.s3_load(data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, SG_partitioning)
 
 etl_pipeline('20230407')
 # json 원본파일 14mb
