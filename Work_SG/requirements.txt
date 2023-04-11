@@ -1,0 +1,6 @@
+b64uuid==0.1
+boto3==1.17.62
+cryptography==39.0.2
+requests==2.28.2
+python-dotenv==1.0.0
+xmltodict==0.13.0
