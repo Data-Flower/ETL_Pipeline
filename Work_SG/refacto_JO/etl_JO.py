@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from modules import extract_, compress_, load_
 
-start = time.time()
+
 AWS_SERVICE_NAME = "s3"
 REGION = "ap-northeast-2"
 AWS_ACCESS_ID = 'aws_access_key_id'
@@ -112,10 +112,13 @@ def etl_pipeline(date):
     data = transform(date)
     load_.s3_load(data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, SG_partitioning)
 
-etl_pipeline('20230407')
-# json 원본파일 14mb
-# gzip 압축파일 181kb
+if __name__ == '__main__':
+    start = time.time()
+    
+    etl_pipeline('20230407')
+    # json 원본파일 14mb
+    # gzip 압축파일 181kb
 
-end = time.time()
-print(f"{end - start:.2f} sec")
-# 분산처리 전 346.23초 소요
+    end = time.time()
+    print(f"{end - start:.2f} sec")
+    # 분산처리 전 346.23초 소요

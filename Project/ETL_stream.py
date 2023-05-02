@@ -10,7 +10,19 @@ AWS_ACCESS_ID = 'aws_access_key_id'
 AWS_SECRET_KEY = 'aws_secret_access_key'
 AWS_BUCKET_NAME = 'aws_s3_bucket_name'
 
-etl = ETL_SG()
+TARGET_DATE = '20230407'
+
+env = {
+    'AWS_SERVICE_NAME': AWS_SERVICE_NAME,
+    'REGION': REGION,
+    'AWS_ACCESS_ID': AWS_ACCESS_ID,
+    'AWS_SECRET_KEY': AWS_SECRET_KEY,
+    'AWS_BUCKET_NAME': AWS_BUCKET_NAME,
+    'TARGET_DATE': TARGET_DATE
+}
+
+etl = ETL_SG(env)
+etl.run()
 
 def partitioning(flattened_data):
     if len(flattened_data) != 0:

@@ -4,8 +4,6 @@ class ETL_SG(Core):
     """
     SG sub_project etl pipeline
     """
-    def __init__(self, env=None):
-        super().__init__(env)
 
     def _extract_data(self, date):
         """
@@ -120,3 +118,33 @@ class ETL_SG(Core):
         import cp2_modules.load_ as aws
 
         aws.s3_load(data, aws_service_name, region, aws_access_id, aws_secret_key, aws_bucket_name, partitioning_func = None)
+
+    def _transform_data(self, data):
+        pass
+
+    def partitioning(self, flattened_data):
+        if len(flattened_data) != 0:
+            year = flattened_data[0]['ADJ_DT'][0:4]
+            month = flattened_data[0]['ADJ_DT'][4:6]
+            date = flattened_data[0]['ADJ_DT']
+
+            directory = f'{year}/{month}/{date}.json.gz'
+
+            return flattened_data, directory
+
+    def etl_stream(self, date):
+        flattened_data = self._extract_data(date)
+
+        # schema 설정
+        # sparkSession open
+
+        # spark 처리 코드 작성가능
+
+        self.etl._load_data(flattened_data, self.env['AWS_SERVICE_NAME'], self.env['REGION'], 
+                            self.env['AWS_ACCESS_ID'], self.env['AWS_SECRET_KEY'], self.env['AWS_BUCKET_NAME'], self.partitioning)
+
+    def run_etl(self):
+        self.etl_stream(self['TARGET_DATE'])
+
+        pass
+    
