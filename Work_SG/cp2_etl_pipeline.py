@@ -102,7 +102,20 @@ def transform(date):
             else:
                 pass
         dict1['data'].append(dict2)
-    return dict1
+        
+    flattened_data = []
+    for item_data in dict1['data']:
+        for item, bubin_list in item_data.items():
+            for bubin_data in bubin_list:
+                for bubin, transactions in bubin_data.items():
+                    for transaction in transactions:
+                        flattened_row = transaction.copy()
+                        flattened_row['item'] = item
+                        flattened_row['bubin'] = bubin
+                        flattened_data.append(flattened_row)
+
+    return flattened_data
+
 
 def s3_connection():
     '''
