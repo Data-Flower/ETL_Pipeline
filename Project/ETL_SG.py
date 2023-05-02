@@ -6,7 +6,7 @@ class ETL_SG(Core):
     """
     def __init__(self, env=None):
         super().__init__(env)
-    
+
     def _extract_data(self, date):
         """
         특수한 경우,
@@ -69,46 +69,31 @@ class ETL_SG(Core):
                                     ('s_sangi', '')
                                 )
                         html_dict = extract_url(URL, params)
+
+                        _data = {
+                            'idx' : ((page -1) * 10) + (i + 1),
+                            'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
+                            'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
+                            'UUN' : html_dict['lists']['list'][i]['UUN'],
+                            'DDD' : html_dict['lists']['list'][i]['DDD'],
+                            'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
+                            'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
+                            'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
+                            'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
+                        }
+
                         if list_total_count % 10 > 1:
                             for i in range(len(html_dict['lists']['list'])):
-                                dict3[f'{bubin}'].append({
-                                    'idx' : ((page -1) * 10) + (i + 1),
-                                    'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
-                                    'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
-                                    'UUN' : html_dict['lists']['list'][i]['UUN'],
-                                    'DDD' : html_dict['lists']['list'][i]['DDD'],
-                                    'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
-                                    'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
-                                    'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                    'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
-                                    })
+                                dict3[f'{bubin}'].append(_data)
                         elif list_total_count % 10 == 1:
                             if list_total_count > 1:
                                 for i in range(10):
-                                    dict3[f'{bubin}'].append({
-                                        'idx' : ((page -1) * 10) + (i + 1),
-                                        'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
-                                        'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
-                                        'UUN' : html_dict['lists']['list'][i]['UUN'],
-                                        'DDD' : html_dict['lists']['list'][i]['DDD'],
-                                        'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
-                                        'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
-                                        'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                        'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
-                                        })
+                                    dict3[f'{bubin}'].append(_data)
                                 list_total_count -= 10
                             elif list_total_count == 1:
-                                dict3[f'{bubin}'].append({
-                                    'idx' : int(html_dict['lists']['list_total_count']),
-                                    'PUMMOK' : html_dict['lists']['list']['PUMMOK'],
-                                    'PUMJONG' : html_dict['lists']['list']['PUMJONG'],
-                                    'UUN' : html_dict['lists']['list']['UUN'],
-                                    'DDD' : html_dict['lists']['list']['DDD'],
-                                    'PPRICE' : html_dict['lists']['list']['PPRICE'],
-                                    'SSANGI' : html_dict['lists']['list']['SSANGI'],
-                                    'CORP_NM' : html_dict['lists']['list']['CORP_NM'],
-                                    'ADJ_DT' : html_dict['lists']['list']['ADJ_DT']
-                                    })
+                                _data['idx'] = int(html_dict['lists']['list_total_count'])
+                                dict3[f'{bubin}'].append(_data)
+
                     dict2[f'{pummok}'].append(dict3)
                 else:
                     pass
