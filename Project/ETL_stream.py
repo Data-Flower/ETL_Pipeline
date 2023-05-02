@@ -18,34 +18,15 @@ env = {
     'AWS_ACCESS_ID': AWS_ACCESS_ID,
     'AWS_SECRET_KEY': AWS_SECRET_KEY,
     'AWS_BUCKET_NAME': AWS_BUCKET_NAME,
-    'TARGET_DATE': TARGET_DATE
+    'TARGET_DATE': TARGET_DATE,
+    'URL': 'http://www.garak.co.kr/publicdata/dataOpen.do?'
 }
 
 etl = ETL_SG(env)
 etl.run()
 
-def partitioning(flattened_data):
-    if len(flattened_data) != 0:
-        year = flattened_data[0]['ADJ_DT'][0:4]
-        month = flattened_data[0]['ADJ_DT'][4:6]
-        date = flattened_data[0]['ADJ_DT']
-
-        directory = f'{year}/{month}/{date}.json.gz'
-
-        return flattened_data, directory
-
-
-def etl_stream(date):
-    flattened_data = etl._extract_data(date)
-
-    # schema 설정
-    # sparkSession open
-
-    # spark 처리 코드 작성가능
-
-    etl._load_data(flattened_data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, partitioning)
         
-etl_stream('20230407')
+# etl_stream('20230407')
 
 # spark.stop()
     
