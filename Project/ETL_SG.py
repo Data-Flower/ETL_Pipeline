@@ -1,4 +1,5 @@
 from Core import Core
+import asyncio
 
 class ETL_SG(Core):
     """
@@ -70,32 +71,19 @@ class ETL_SG(Core):
                 for page in range(1, total_page+1):
 
                     params = self._set_extract_param(page, date, bubin, pummok)
-                    # extract url 2
-                    html_dict = self.extract_url(self.env['URL'], params)
 
-                    _data = {
-                        'idx' : ((page -1) * 10) + (i + 1),
-                        'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
-                        'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
-                        'UUN' : html_dict['lists']['list'][i]['UUN'],
-                        'DDD' : html_dict['lists']['list'][i]['DDD'],
-                        'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
-                        'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
-                        'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                        'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
+                    # async 
+                    async_param = {
+                        'url': self.env['URL'],
+                        'params': params,
+                        'dict3': dict3,
+                        'bubin': bubin,
+                        'page': page,
+                        'list_total_count': list_total_count,
                     }
 
-                    if list_total_count % 10 > 1:
-                        for i in range(len(html_dict['lists']['list'])):
-                            dict3[f'{bubin}'].append(_data)
-                    elif list_total_count % 10 == 1:
-                        if list_total_count > 1:
-                            for i in range(10):
-                                dict3[f'{bubin}'].append(_data)
-                            list_total_count -= 10
-                        elif list_total_count == 1:
-                            _data['idx'] = int(html_dict['lists']['list_total_count'])
-                            dict3[f'{bubin}'].append(_data)
+                    asyncio.Task(self.request_data(async_param))
+
 
                 dict2[f'{pummok}'].append(dict3)
 
@@ -104,9 +92,46 @@ class ETL_SG(Core):
             dict1['data'].append(dict2)
 
         # endregion
-
         return dict1
-    
+
+    async def request_data(self, _params):
+        url = _params['url']
+        params = _params['params']
+        dict3 = _params['dict3']
+        bubin = _params['bubin']
+        page = _params['page']
+        list_total_count = _params['list_total_count']
+
+        # extract url 2
+        html_dict = self.extract_url(url, params)
+        
+        _data = {
+            'idx' : ((page -1) * 10) + (i + 1),
+            'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
+            'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
+            'UUN' : html_dict['lists']['list'][i]['UUN'],
+            'DDD' : html_dict['lists']['list'][i]['DDD'],
+            'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
+            'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
+            'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
+            'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
+        }
+
+        if list_total_count % 10 > 1:
+            for i in range(len(html_dict['lists']['list'])):
+                dict3[f'{bubin}'].append(_data)
+        elif list_total_count % 10 == 1:
+            if list_total_count > 1:
+                for i in range(10):
+                    dict3[f'{bubin}'].append(_data)
+                list_total_count -= 10
+            elif list_total_count == 1:
+                _data['idx'] = int(html_dict['lists']['list_total_count'])
+                dict3[f'{bubin}'].append(_data)
+        
+        await asyncio.sleep(0.001)
+
+
     def _transform_data(self, data, bubin_list, pummok_list):
         # region BLOCK 2: set flattened_data
         flattened_data = []
