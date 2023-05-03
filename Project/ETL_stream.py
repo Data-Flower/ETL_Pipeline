@@ -23,7 +23,7 @@ env = {
 }
 
 etl = ETL_SG(env)
-etl.run()
+etl.run_etl()
 
         
 # etl_stream('20230407')
