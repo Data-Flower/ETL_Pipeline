@@ -24,18 +24,19 @@ def data_format2(data):
             }
     return format
 
-def integrated_data(date, bubin):
+def integrated_data(date, bubin, pummok):
     import math
     from modules import parameter_, extract_, transform_
 
     url = parameter_.url()
-    params1, params2 = parameter_.page_param(s_date=date)
+    params1 = parameter_.page_param(page='1', s_date=date, s_bubin=bubin, s_pummok=pummok)
 
     dict = {f'{bubin}': []}
     list_total_count = int(extract_.extract(url, params1)['lists']['list_total_count'])
     total_page = math.ceil(int(list_total_count) / 10)
     if int(list_total_count) != 0:
         for page in range(1, total_page+1):
+            params2 = parameter_.page_param(page=page, s_date=date, s_bubin=bubin, s_pummok=pummok)
             html_dict = extract_.extract(url, params2)
             if list_total_count % 10 > 1:
                 for i in range(len(html_dict['lists']['list'])):
@@ -76,7 +77,7 @@ def transform(date):
     for pummok in pummok_list:
         dict2 = {f'{pummok}': []}
         for bubin in bubin_list:
-            dict3 = transform_.integrated_data(date, bubin)
+            dict3 = transform_.integrated_data(date=date, bubin=bubin, pummok=pummok)
             dict2[f'{pummok}'].append(dict3)
         dict1['data'].append(dict2)
         

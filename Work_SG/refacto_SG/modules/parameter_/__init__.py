@@ -9,20 +9,7 @@ def page_param(page, s_date, s_bubin, s_pummok):
     garak_id = os.environ.get('garak_id')
     garak_passwd = os.environ.get('garak_passwd')
 
-    params1 = (
-        ('id', garak_id),
-        ('passwd', garak_passwd),
-        ('dataid', 'data12'),
-        ('pagesize', '10'),
-        ('pageidx', '1'),
-        ('portal.templet', 'false'),
-        ('s_date', s_date),
-        ('s_bubin', s_bubin),
-        ('s_pummok', s_pummok),
-        ('s_sangi', '')
-    )
-
-    params2 = (
+    params = (
         ('id', garak_id),
         ('passwd', garak_passwd),
         ('dataid', 'data12'),
@@ -34,8 +21,7 @@ def page_param(page, s_date, s_bubin, s_pummok):
         ('s_pummok', s_pummok),
         ('s_sangi', '')
     )
-
-    return params1, params2
+    return params
 
 def url():
     url = 'http://www.garak.co.kr/publicdata/dataOpen.do?'
