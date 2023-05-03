@@ -4,7 +4,6 @@ class ETL_SG(Core):
     """
     SG sub_project etl pipeline
     """
-
     def _set_extract_param(self, page, date, bubin, pummok):
         """
         extract_url 함수의 param을 설정하는 함수

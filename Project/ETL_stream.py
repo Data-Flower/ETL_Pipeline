@@ -23,6 +23,7 @@ env = {
 }
 
 etl = ETL_SG(env)
+# etl.test()
 etl.run_etl()
 
         
