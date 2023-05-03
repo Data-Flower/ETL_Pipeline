@@ -148,8 +148,6 @@ with DAG(
                             flattened_row['bubin'] = bubin
                             flattened_data.append(flattened_row)
 
-        return flattened_data
-
         s3 = boto3.client(
         service_name="s3",
         region_name="ap-northeast-2",
@@ -157,10 +155,10 @@ with DAG(
         aws_secret_access_key=aws_secret_access_key,
         )
 
-        if len(dict1['data']) != 0:
-            year = dict1['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT'][0:4]
-            month = dict1['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT'][4:6]
-            date = dict1['data'][0]['감귤'][0]['11000101'][0]['ADJ_DT']
+        if len(flattened_data) != 0:
+            year = flattened_data[0]['ADJ_DT'][0:4]
+            month = flattened_data[0]['ADJ_DT'][4:6]
+            date = flattened_data[0]['ADJ_DT']
 
             directory = f'{year}/{month}/{date}.json.gz'
             compressed_data = gzip.compress(json.dumps(dict1, ensure_ascii=False, indent=4).encode('utf-8'))

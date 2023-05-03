@@ -27,7 +27,7 @@ def partitioning(data):
     '''
     파티셔닝 함수
     '''
-    if len(data['data']) != 0:
+    if len(data) != 0:
         year = data[0]['ADJ_DT'][0:4]
         month = data[0]['ADJ_DT'][4:6]
         date = data[0]['ADJ_DT']
@@ -51,13 +51,12 @@ def load(data):
     S3에 저장하는 함수
     '''
     import os
-    from modules import load_
     from dotenv import load_dotenv
     load_dotenv()
 
-    s3 = load_.s3_connection()
-    compressed_data = load_.compress(data)
-    directory = load_.load(data)
+    s3 = s3_connection()
+    compressed_data = compress(data)
+    directory = partitioning(data)
 
     aws_s3_bucket_name = os.environ.get('aws_s3_bucket_name')
     s3.put_object(
@@ -65,3 +64,13 @@ def load(data):
         Body = compressed_data,
         Key = directory,
     )
+
+def save_local(date, data):
+    '''
+    json 데이터를 로컬에 저장하는 함수
+    '''
+    import json
+    
+    path = f'CP2/{date}.json'
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)

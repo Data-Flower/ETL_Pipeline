@@ -38,7 +38,7 @@ def get_obj(date):
     json_data = json.loads(content)
     return json_data
 
-json_data = get_obj('20230403')
+json_data = get_obj('20230426')
 
 def save_local(data):
     '''
@@ -46,9 +46,9 @@ def save_local(data):
     '''
     import json
     
-    path = 'CP2/data.json'
+    path = 'CP2/20230426.json'
     with open(path, 'w', encoding='utf-8') as f:
-        json.dump(json_data, f, ensure_ascii=False, indent=4)
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
 save_local(json_data)
 
