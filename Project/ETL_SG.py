@@ -36,22 +36,14 @@ class ETL_SG(Core):
 
         return ext.extract(url, param)
 
-    def _extract_data(self, date):
+    def _extract_data(self, date, bubin_list, pummok_list):
         """
         특수한 경우,
         여러번의 _extract_url 함수 호출로 전체 데이터를 추출
         """
         import math
-        import json
+        # import json
         import pandas as pd
-        from dotenv import load_dotenv
-        load_dotenv()
-
-        bubin_list = ['11000101','11000102','11000103','11000104','11000105','11000106']
-        pummok_list = ['감귤','감자','건고추','고구마','단감','당근','딸기','마늘','무',
-                        '미나리','바나나','배','배추','버섯','사과','상추','생고추','수박',
-                        '시금치','양배추','양상추','양파','오이','참외','토마토','파',
-                        '포도','피망','호박']
 
         # region BLOCK 1: set dict1
         dict1 = {'data': []}
@@ -113,9 +105,12 @@ class ETL_SG(Core):
 
         # endregion
 
+        return dict1
+    
+    def _transform_data(self, data):
         # region BLOCK 2: set flattened_data
         flattened_data = []
-        for item_data in dict1['data']:
+        for item_data in data['data']:
             for item, bubin_list in item_data.items():
                 for bubin_data in bubin_list:
                     for bubin, transactions in bubin_data.items():
@@ -128,8 +123,6 @@ class ETL_SG(Core):
         # endregion
 
         return flattened_data
-    
-    def _transform_data(self, data):
         pass
 
 
@@ -155,7 +148,21 @@ class ETL_SG(Core):
             return flattened_data, directory
 
     def etl_stream(self, date):
-        flattened_data = self._extract_data(date)
+        import math
+        import json
+        import pandas as pd
+        from dotenv import load_dotenv
+        load_dotenv()
+
+        bubin_list = ['11000101','11000102','11000103','11000104','11000105','11000106']
+        pummok_list = ['감귤','감자','건고추','고구마','단감','당근','딸기','마늘','무',
+                        '미나리','바나나','배','배추','버섯','사과','상추','생고추','수박',
+                        '시금치','양배추','양상추','양파','오이','참외','토마토','파',
+                        '포도','피망','호박']
+        
+        dict1 = self._extract_data(date, bubin_list, pummok_list)
+
+        flattened_data = self._transform_data(dict1)
 
         # schema 설정
         # sparkSession open
