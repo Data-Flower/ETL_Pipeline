@@ -123,7 +123,6 @@ class ETL_SG(Core):
         # endregion
 
         return flattened_data
-        pass
 
 
     def _load_data(self, data, partitioning_func = None):
