@@ -107,7 +107,7 @@ class ETL_SG(Core):
 
         return dict1
     
-    def _transform_data(self, data):
+    def _transform_data(self, data, bubin_list, pummok_list):
         # region BLOCK 2: set flattened_data
         flattened_data = []
         for item_data in data['data']:
@@ -154,6 +154,8 @@ class ETL_SG(Core):
         from dotenv import load_dotenv
         load_dotenv()
 
+        # self.env['bubin_list'] = ['11000101','11000102','11000103','11000104','11000105','11000106']
+
         bubin_list = ['11000101','11000102','11000103','11000104','11000105','11000106']
         pummok_list = ['감귤','감자','건고추','고구마','단감','당근','딸기','마늘','무',
                         '미나리','바나나','배','배추','버섯','사과','상추','생고추','수박',
@@ -162,7 +164,7 @@ class ETL_SG(Core):
         
         dict1 = self._extract_data(date, bubin_list, pummok_list)
 
-        flattened_data = self._transform_data(dict1)
+        flattened_data = self._transform_data(dict1, bubin_list, pummok_list)
 
         # schema 설정
         # sparkSession open
