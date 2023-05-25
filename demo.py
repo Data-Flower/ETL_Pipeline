@@ -14,7 +14,7 @@ env_test = {
 2. 프로젝트 아키텍쳐에서 
 부모 클래스(Core)를 상속한 서브 프로젝트의 클래스(ETL_CP1)를 임포트한다.
 """
-from Project.ETL_CP1 import ETL_CP1
+from Project.CP1.ETL_CP1 import ETL_CP1
 
 # 3. 임포트한 자식 클래스를 생성(인스턴스화)한다.
 # ★ 이때, 1에서 작성했던, 인스턴스 내부의 메서드가 동작하기 위해 필요한 데이터를 전달한다.

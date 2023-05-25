@@ -19,11 +19,12 @@ class ETL_CP1(Core):
         # import modules.json_ as json_
         # import modules.b64uuid_ as b64
         # import modules.converts_ as conv
-        import modules.times_ as times
+        # import modules.times_ as times
 
         import common.cryptography_ as crypto
         import common.json_ as json_
         import common.b64uuid_ as b64
+        import common.times_ as times
 
         import tmp_modules.converts_ as conv
 
@@ -59,7 +60,7 @@ class ETL_CP1(Core):
 
         # requests 모듈을 사용하여 데이터를 가져온다.
         url = self.env["url"]
-        data = self.extract_url(url)
+        data = self._extract_url(url)
 
         _data = {}
 
@@ -71,7 +72,7 @@ class ETL_CP1(Core):
             # import modules.times_ as times
             import common.times_ as times
 
-            _json = self.transform_data(i)
+            _json = self._transform_data(i)
 
             # # s3에 저장된 데이터의 위치를 기록
             # 타임스탬프를 datetime으로 변환 (decrypt_str['inDate']의 값과 동일함)
