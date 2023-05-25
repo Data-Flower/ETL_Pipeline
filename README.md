@@ -14,6 +14,14 @@
 
 ---
 
+## 참여자 작업 내역
+
+### [JO](doc/LOG_JO.md)
+
+### [SG](doc/LOG_SG.md)
+
+---
+
 ### Python
 
 > Extract (추출)
