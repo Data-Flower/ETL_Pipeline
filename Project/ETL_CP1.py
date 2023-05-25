@@ -17,8 +17,10 @@ class ETL_CP1(Core):
         import modules.cryptography_ as crypto
         import modules.json_ as json_
         import modules.b64uuid_ as b64
-        import modules.converts_ as conv
+        # import modules.converts_ as conv
         import modules.times_ as times
+        
+        import tmp_modules.converts_ as conv
 
         # 1 미리 주어진 대칭키를 이용한 복호화를 수행한다.
         key = b't-jdqnDewRx9kWithdsTMS21eLrri70TpkMq2A59jX8='
