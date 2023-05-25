@@ -9,8 +9,8 @@ class ETL_CP1(Core):
     
     def _extract_url(self, url):
         import modules.requests_ as req
-
-        return req.req_data(url)
+        
+        return req.request(url)
 
     def _transform_data(self, data):
         """ 하나의 데이터를 받아서 변환을 수행하고 결과를 반환한다. """
@@ -22,7 +22,7 @@ class ETL_CP1(Core):
 
         # 1 미리 주어진 대칭키를 이용한 복호화를 수행한다.
         key = b't-jdqnDewRx9kWithdsTMS21eLrri70TpkMq2A59jX8='
-        decrypt_str = crypto.decrypt_data(key, data['data']).decode('utf-8')
+        decrypt_str = crypto.decrypt(key, data['data']).decode('utf-8')
         # print(decrypt_str); print()
 
         # 2 복호화된 데이터를 json(dict)으로 변환한다.
@@ -88,7 +88,7 @@ class ETL_CP1(Core):
 
             accessParams = self.env["aws"]
 
-            self.load_data(_compress, filepath, accessParams)
+            self._load_data(_compress, filepath, accessParams)
 
         print('finish schedule job')
 
