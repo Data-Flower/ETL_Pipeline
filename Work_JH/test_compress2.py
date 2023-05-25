@@ -3,7 +3,7 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-from modules.compress_ import _compress, _decompress, compress, decompress, compress_test, decompress_test
+from common.compress_ import _compress, _decompress, compress, decompress, compress_test, decompress_test
 _compress()
 _decompress()
 

@@ -8,18 +8,23 @@ class ETL_CP1(Core):
         super().__init__(env)
     
     def _extract_url(self, url):
-        import modules.requests_ as req
+        # import modules.requests_ as req
+        import common.requests_ as req
         
         return req.request(url)
 
     def _transform_data(self, data):
         """ 하나의 데이터를 받아서 변환을 수행하고 결과를 반환한다. """
-        import modules.cryptography_ as crypto
-        import modules.json_ as json_
-        import modules.b64uuid_ as b64
+        # import modules.cryptography_ as crypto
+        # import modules.json_ as json_
+        # import modules.b64uuid_ as b64
         # import modules.converts_ as conv
         import modules.times_ as times
-        
+
+        import common.cryptography_ as crypto
+        import common.json_ as json_
+        import common.b64uuid_ as b64
+
         import tmp_modules.converts_ as conv
 
         # 1 미리 주어진 대칭키를 이용한 복호화를 수행한다.
@@ -42,13 +47,14 @@ class ETL_CP1(Core):
         return _json
 
     def _load_data(self, data, filepath, params):
-        import modules.aws_ as aws
+        import common.aws_ as aws
         aws.send_to_aws_s3_path(data, filepath, params)
 
     def _schedule_job(self):
 
 
-        import modules.compress_ as compress
+        # import modules.compress_ as compress
+        import common.compress_ as compress
         import datetime
 
         # requests 모듈을 사용하여 데이터를 가져온다.
@@ -62,7 +68,8 @@ class ETL_CP1(Core):
         # 먼저 데이터를 분할한다.
         # 파일 패스를 키값으로 설정
         for i in data:
-            import modules.times_ as times
+            # import modules.times_ as times
+            import common.times_ as times
 
             _json = self.transform_data(i)
 
