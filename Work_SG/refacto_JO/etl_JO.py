@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 from modules import extract_, compress_, load_
 
-start = time.time()
+
 AWS_SERVICE_NAME = "s3"
 REGION = "ap-northeast-2"
 AWS_ACCESS_ID = 'aws_access_key_id'
@@ -65,46 +65,30 @@ def transform(date):
                                 ('s_sangi', '')
                              )
                     html_dict = extract_.extract(url, params)
+
+                    _data = {
+                        'idx' : ((page -1) * 10) + (i + 1),
+                        'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
+                        'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
+                        'UUN' : html_dict['lists']['list'][i]['UUN'],
+                        'DDD' : html_dict['lists']['list'][i]['DDD'],
+                        'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
+                        'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
+                        'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
+                        'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
+                    }
+
                     if list_total_count % 10 > 1:
                         for i in range(len(html_dict['lists']['list'])):
-                            dict3[f'{bubin}'].append({
-                                'idx' : ((page -1) * 10) + (i + 1),
-                                'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
-                                'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
-                                'UUN' : html_dict['lists']['list'][i]['UUN'],
-                                'DDD' : html_dict['lists']['list'][i]['DDD'],
-                                'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
-                                'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
-                                'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
-                                })
+                            dict3[f'{bubin}'].append(_data)
                     elif list_total_count % 10 == 1:
                         if list_total_count > 1:
                             for i in range(10):
-                                dict3[f'{bubin}'].append({
-                                    'idx' : ((page -1) * 10) + (i + 1),
-                                    'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
-                                    'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
-                                    'UUN' : html_dict['lists']['list'][i]['UUN'],
-                                    'DDD' : html_dict['lists']['list'][i]['DDD'],
-                                    'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
-                                    'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
-                                    'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                    'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
-                                    })
+                                dict3[f'{bubin}'].append(_data)
                             list_total_count -= 10
                         elif list_total_count == 1:
-                            dict3[f'{bubin}'].append({
-                                'idx' : int(html_dict['lists']['list_total_count']),
-                                'PUMMOK' : html_dict['lists']['list']['PUMMOK'],
-                                'PUMJONG' : html_dict['lists']['list']['PUMJONG'],
-                                'UUN' : html_dict['lists']['list']['UUN'],
-                                'DDD' : html_dict['lists']['list']['DDD'],
-                                'PPRICE' : html_dict['lists']['list']['PPRICE'],
-                                'SSANGI' : html_dict['lists']['list']['SSANGI'],
-                                'CORP_NM' : html_dict['lists']['list']['CORP_NM'],
-                                'ADJ_DT' : html_dict['lists']['list']['ADJ_DT']
-                                })
+                            _data['idx'] = int(html_dict['lists']['list_total_count'])
+                            dict3[f'{bubin}'].append(_data)
                 dict2[f'{pummok}'].append(dict3)
             else:
                 pass
@@ -128,10 +112,13 @@ def etl_pipeline(date):
     data = transform(date)
     load_.s3_load(data, AWS_SERVICE_NAME, REGION, AWS_ACCESS_ID, AWS_SECRET_KEY, AWS_BUCKET_NAME, SG_partitioning)
 
-etl_pipeline('20230407')
-# json 원본파일 14mb
-# gzip 압축파일 181kb
+if __name__ == '__main__':
+    start = time.time()
+    
+    etl_pipeline('20230407')
+    # json 원본파일 14mb
+    # gzip 압축파일 181kb
 
-end = time.time()
-print(f"{end - start:.2f} sec")
-# 분산처리 전 346.23초 소요
+    end = time.time()
+    print(f"{end - start:.2f} sec")
+    # 분산처리 전 346.23초 소요
