@@ -1,6 +1,3 @@
-import time
-
-start = time.time()
 
 def extract(page, s_date, s_bubin, s_pummok):
     '''
@@ -61,7 +58,7 @@ def transform(date):
                     if list_total_count % 10 > 1:
                         for i in range(len(html_dict['lists']['list'])):
                             dict3[f'{bubin}'].append({
-                                'idx' : ((page -1) * 10) + (i + 1),
+                                'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT'],
                                 'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
                                 'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
                                 'UUN' : html_dict['lists']['list'][i]['UUN'],
@@ -69,13 +66,12 @@ def transform(date):
                                 'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
                                 'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
                                 'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
                                 })
                     elif list_total_count % 10 == 1:
                         if list_total_count > 1:
                             for i in range(10):
                                 dict3[f'{bubin}'].append({
-                                    'idx' : ((page -1) * 10) + (i + 1),
+                                    'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT'],
                                     'PUMMOK' : html_dict['lists']['list'][i]['PUMMOK'],
                                     'PUMJONG' : html_dict['lists']['list'][i]['PUMJONG'],
                                     'UUN' : html_dict['lists']['list'][i]['UUN'],
@@ -83,12 +79,11 @@ def transform(date):
                                     'PPRICE' : html_dict['lists']['list'][i]['PPRICE'],
                                     'SSANGI' : html_dict['lists']['list'][i]['SSANGI'],
                                     'CORP_NM' : html_dict['lists']['list'][i]['CORP_NM'],
-                                    'ADJ_DT' : html_dict['lists']['list'][i]['ADJ_DT']
                                     })
                             list_total_count -= 10
                         elif list_total_count == 1:
                             dict3[f'{bubin}'].append({
-                                'idx' : int(html_dict['lists']['list_total_count']),
+                                'ADJ_DT' : html_dict['lists']['list']['ADJ_DT'],
                                 'PUMMOK' : html_dict['lists']['list']['PUMMOK'],
                                 'PUMJONG' : html_dict['lists']['list']['PUMJONG'],
                                 'UUN' : html_dict['lists']['list']['UUN'],
@@ -96,7 +91,6 @@ def transform(date):
                                 'PPRICE' : html_dict['lists']['list']['PPRICE'],
                                 'SSANGI' : html_dict['lists']['list']['SSANGI'],
                                 'CORP_NM' : html_dict['lists']['list']['CORP_NM'],
-                                'ADJ_DT' : html_dict['lists']['list']['ADJ_DT']
                                 })
                 dict2[f'{pummok}'].append(dict3)
             else:
@@ -110,12 +104,10 @@ def transform(date):
                 for bubin, transactions in bubin_data.items():
                     for transaction in transactions:
                         flattened_row = transaction.copy()
-                        flattened_row['item'] = item
                         flattened_row['bubin'] = bubin
                         flattened_data.append(flattened_row)
 
     return flattened_data
-
 
 def s3_connection():
     '''
@@ -168,14 +160,18 @@ def load(data):
             Key = directory,
         )
 
-def etl_pipeline(date):
-    data = transform(date)
-    load(data)
+def etl_pipeline(date1, date2):
+    from datetime import datetime, timedelta
+    start = date1
+    end = date2
 
-etl_pipeline('20230403')
-# json 원본파일 14mb
-# gzip 압축파일 181kb
+    start_date = datetime.strptime(start, '%Y%m%d')
+    end_date = datetime.strptime(end, '%Y%m%d')
+    dates = [(start_date + timedelta(days=i)).strftime("%Y%m%d") for i in range((end_date-start_date).days+1)]
 
-end = time.time()
-print(f"{end - start:.2f} sec")
-# 분산처리 전 346.23초 소요
+    for date in dates:
+        print(date)
+        data = transform(date)
+        load(data)
+
+etl_pipeline('20230401','20230430')
