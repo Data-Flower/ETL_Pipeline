@@ -40,10 +40,7 @@ def transform(date):
     import math
 
     bubin_list = ['11000101','11000102','11000103','11000104','11000105','11000106']
-    pummok_list = ['감귤','감자','건고추','고구마','단감','당근','딸기','마늘','무',
-                    '미나리','바나나','배','배추','버섯','사과','상추','생고추','수박',
-                    '시금치','양배추','양상추','양파','오이','참외','토마토','파',
-                    '포도','피망','호박']
+    pummok_list = ['고구마']
 
     dict1 = {'data': []}
     for pummok in pummok_list:
@@ -97,17 +94,19 @@ def transform(date):
                 pass
         dict1['data'].append(dict2)
         
-    flattened_data = []
-    for item_data in dict1['data']:
-        for item, bubin_list in item_data.items():
-            for bubin_data in bubin_list:
-                for bubin, transactions in bubin_data.items():
-                    for transaction in transactions:
-                        flattened_row = transaction.copy()
-                        flattened_row['bubin'] = bubin
-                        flattened_data.append(flattened_row)
+    return dict1
 
-    return flattened_data
+    # flattened_data = []
+    # for item_data in dict1['data']:
+    #     for item, bubin_list in item_data.items():
+    #         for bubin_data in bubin_list:
+    #             for bubin, transactions in bubin_data.items():
+    #                 for transaction in transactions:
+    #                     flattened_row = transaction.copy()
+    #                     flattened_row['bubin'] = bubin
+    #                     flattened_data.append(flattened_row)
+
+    # return flattened_data
 
 print(transform('20230401'))
 
@@ -151,7 +150,7 @@ def load(data):
         month = data[0]['ADJ_DT'][4:6]
         date = data[0]['ADJ_DT']
 
-        directory = f'{year}/{month}/{date}.json.gz'
+        directory = f'goguma/{year}/{month}/{date}.json.gz'
         compressed_data = gzip.compress(json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8'))
         
         s3 = s3_connection()
