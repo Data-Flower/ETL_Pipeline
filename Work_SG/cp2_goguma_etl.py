@@ -128,7 +128,7 @@ def s3_connection():
         print("s3 bucket connected!") 
         return s3
 
-def load(data, pummok):
+def load(data, pummok): # 
     '''
     파티셔닝 후 저장하는 함수
     '''
@@ -143,7 +143,7 @@ def load(data, pummok):
         month = data[0]['ADJ_DT'][4:6]
         date = data[0]['ADJ_DT']
 
-        directory = f'{pummok}/{year}/{month}/{date}.json.gz'
+        directory = f'items/{year}/{month}/{pummok}/{date}.json.gz' # TODO sg : 품목_등급으로 폴더명
         compressed_data = gzip.compress(json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8'))
         
         s3 = s3_connection()
@@ -168,4 +168,6 @@ def etl_pipeline(date1, date2, pummok, DDD):
         data = transform(date, pummok, DDD)
         load(data, pummok)
 
-# etl_pipeline('20221226','20221231', '고구마', '특(1등)')
+etl_pipeline('20221226','20221231', '고구마', '특(1등)')
+
+# TODO sg : items/AIModel/[결과데이터 파일].gz 형식으로 저장되게끔 load 함수 수정 / 더미 텍스트 파일로

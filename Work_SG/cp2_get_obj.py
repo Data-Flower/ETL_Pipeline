@@ -75,6 +75,6 @@ def save_local(data, file_path):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-data = get_obj('20230403', '20230407')
+data = get_obj('20200101', '20230531')
 
 print(data)

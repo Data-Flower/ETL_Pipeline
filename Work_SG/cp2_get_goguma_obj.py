@@ -12,6 +12,7 @@ def get_obj(date1, date2=None):
     from dotenv import load_dotenv
     load_dotenv()
 
+    # TODO sg : 금요일 회의때 선우님께 .env 파일 전달
     aws_access_key_id = os.environ.get('aws_access_key_id')
     aws_secret_access_key = os.environ.get('aws_secret_access_key')
     aws_s3_bucket_name = os.environ.get('aws_s3_bucket_name')
@@ -54,7 +55,7 @@ def get_obj(date1, date2=None):
 
             obj = s3.get_object(
                 Bucket = aws_s3_bucket_name,
-                Key = f'goguma/{year}/{month}/{date}.json.gz'
+                Key = f'items/{year}/{month}/{date}.json.gz' # TODO sg : cp2_goguma_etl : 146 / 품목_등급 형식으로 ETL 코드로 AWS 폴더 동기화
             )
 
             with gzip.GzipFile(fileobj=obj.get('Body'), mode='r') as gz:
