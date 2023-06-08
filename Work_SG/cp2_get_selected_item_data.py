@@ -1,4 +1,4 @@
-def get_obj(date1, date2=None):
+def get_selected_item_data(date1, date2=None, item=None, grade=None):
     '''
     aws S3 에서 파일을 불러온 뒤\n
     gzip 압축을 풀고 json 데이터를 반환하는 함수
@@ -30,7 +30,7 @@ def get_obj(date1, date2=None):
 
         obj = s3.get_object(
             Bucket = aws_s3_bucket_name,
-            Key = f'goguma/{year}/{month}/{date1}.json.gz'
+            Key = f'items/{year}/{month}/{item}_{grade}/{date1}.json.gz'
         )
 
         with gzip.GzipFile(fileobj=obj.get('Body'), mode='r') as gz:
@@ -50,19 +50,22 @@ def get_obj(date1, date2=None):
         
         data = []
         for date in dates:
-            year = date[0:4]
-            month = date[4:6]
+            try:
+                year = date[0:4]
+                month = date[4:6]
 
-            obj = s3.get_object(
-                Bucket = aws_s3_bucket_name,
-                Key = f'items/{year}/{month}/{date}.json.gz' # TODO sg : cp2_goguma_etl : 146 / 품목_등급 형식으로 ETL 코드로 AWS 폴더 동기화
-            )
+                obj = s3.get_object(
+                    Bucket = aws_s3_bucket_name,
+                    Key = f'items/{year}/{month}/{item}_{grade}/{date}.json.gz'
+                )
 
-            with gzip.GzipFile(fileobj=obj.get('Body'), mode='r') as gz:
-                content = gz.read()
+                with gzip.GzipFile(fileobj=obj.get('Body'), mode='r') as gz:
+                    content = gz.read()
 
-            json_data = json.loads(content)
-            data += json_data
+                json_data = json.loads(content)
+                data += json_data
+            except:
+                pass
         df = pd.DataFrame(data)
         return df
 
@@ -76,6 +79,6 @@ def save_local(data, file_path):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
 
-data = get_obj('20230403', '20230407')
+data = get_selected_item_data('20200601', '20230607', '고구마', '특(1등)')
 
 print(data)
