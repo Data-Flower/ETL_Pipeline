@@ -98,9 +98,11 @@ html_dict = xmltodict.parse(html)
 >
 - ubuntu 20.04 LTS (HVM), SSD Volume Type
 - ssh 접속 오류 발생
-![캡쳐](https://file.notion.so/f/s/aed2c898-0427-451d-8e57-69c5e1e064e4/20230406_231747.png?id=4ea8ce6a-3468-4355-8096-a9863b244016&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107150523&signature=TapOFB9tNFmr-JLAlzfoi2RCEQalyQp2HSrFiS0GYtk&downloadName=20230406_231747.png)
-   - 확인 결과 sk 브로드밴드 사용시 22번 포트 사용 불가로 ssh 접속 안되는 현상 발생
-    - EC2 인스턴스 연결로 접속
+
+<img src='img\20230406_231747.png'>
+
+- 확인 결과 sk 브로드밴드 사용시 22번 포트 사용 불가로 ssh 접속 안되는 현상 발생
+- EC2 인스턴스 연결로 접속
 - t2.micro 프리티어 (1vCPU, 1GiB 메모리) 로는 Airflow 구동 시 다운되는 문제 발생
     - 로컬에서 진행하기로 결정
 
@@ -109,9 +111,13 @@ html_dict = xmltodict.parse(html)
 - Airflow는 리눅스에서만 구동되기 때문에 로컬로 진행하려면
 리눅스 기반 환경이 필요하다.
 - 마이크로소프트 스토어에서 ubuntu 20.04 설치
-![캡쳐](https://file.notion.so/f/s/5e4fcd24-294a-41eb-a03e-3f09b82b17a8/20230411_210135.png?id=b3902d00-62e4-439c-9d84-08b64a13b554&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107233377&signature=AU2hHGxjGTOwnE2KVFktpQhZW9zPG5Sw83LccyDfYLA&downloadName=20230411_210135.png)
+
+<img src='img\20230411_210135.png'>
+
 - systemd 오류 발생
-![캡쳐](https://file.notion.so/f/s/059a1450-515d-4edc-b96c-e192a48fcc82/20230411_214044.png?id=ab4175b0-0c79-4354-b158-8252f0f4c8d7&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107267428&signature=LTITS9yFPwlVe6U4aHrApBUvswb9fQdIvI5qRj3D9z4&downloadName=20230411_214044.png)
+
+<img src='img\20230411_214044.png'>
+
     - 윈도우 기반의 WSL에서 발생하는 오류로, 정식 Linux OS가 아니라서 발생한다.<br>
     Linux의 initd 프로세스가 근래에 systemd로 대체되었지만 WSL은 여전히
     initd 프로세스(PID 1)가<br> 그 역할을 맡고 있어 호환성에 문제가 있다.
@@ -123,14 +129,22 @@ html_dict = xmltodict.parse(html)
 - mysql 8.0 + airflow 2.5.3 설치
 - ssh를 이용할 수 없으므로 dag 파일을 전송할 다른 방법이 필요
     - virtualbox 에서 제공하는 공유폴더 기능을 이용하여 virtualbox_share 폴더 지정
-    ![캡쳐](https://file.notion.so/f/s/574f8d54-630d-4a67-8ab8-0343ba6ffdf7/20230411_233951.png?id=c9e8b4bc-ba87-4627-9d0e-03b25b5fdcfd&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107304979&signature=KxFsXzzoHXgqOJSMKuKxglTcZ5zUvkZJqyEtenl8eTM&downloadName=20230411_233951.png)
+
+    <img src='img\20230411_233951.png'>
+
     - mount -t vboxsf virtualbox_share /home/ente/virtualbox_share/ 명령어로
     ubuntu 상에서 동기화 후 공유폴더 이용 가능
-    ![캡쳐](https://file.notion.so/f/s/776a4149-2d33-4222-8840-a1f42590160f/20230411_234517.png?id=7a22bcdd-776e-43d4-8a66-60596563c5e0&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107330260&signature=IoNkGHkoLVYsJnYOOU-3YoSIiDaudIZS2xtlp_Ww7t0&downloadName=20230411_234517.png)
+
+    <img src='img\20230411_234517.png'>
+
 - airflow standalone 명령어로 webserver와 scheduler 구동
-![캡쳐](https://file.notion.so/f/s/ba39559d-183c-429f-b851-d279979d5c34/VirtualBox_airflow_11_04_2023_23_50_34.png?id=586fbd52-6d95-464a-b906-8c13fb4f8a74&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107354389&signature=oKVrEU8MZ5UGMJe8EIyJBd8R1Nz35HLZGXqNVlS4hA4&downloadName=VirtualBox_airflow_11_04_2023_23_50_34.png)
+
+<img src='img\VirtualBox_airflow_11_04_2023_23_50_34.png'>
+
 - localhost:8080 으로 접속하여 airflow 정상 작동 확인
-![캡쳐](https://file.notion.so/f/s/e862cda1-4239-4b40-9b22-4f6958a8a9f9/VirtualBox_airflow_11_04_2023_23_52_16.png?id=55e1ed37-7f7d-4f4b-b9df-98e0e608b472&table=block&spaceId=42bf19cc-5baa-43aa-850f-f24bed91b0da&expirationTimestamp=1683107376269&signature=mQ_bkS_q8tGyMBdbuhpuXnpDe1j_BJ8wNs4vFYW5SWM&downloadName=VirtualBox_airflow_11_04_2023_23_52_16.png)
+
+<img src='img\VirtualBox_airflow_11_04_2023_23_52_16.png'>
+
 </details>
 
 <br>
