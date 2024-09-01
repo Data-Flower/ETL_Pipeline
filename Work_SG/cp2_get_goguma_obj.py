@@ -1,3 +1,4 @@
+
 def get_obj(date1, date2=None):
     '''
     aws S3 에서 파일을 불러온 뒤\n
@@ -75,6 +76,7 @@ def save_local(data, file_path):
     path = f'{file_path}.json'
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
 
 data = get_obj('20230403', '20230407')
 

@@ -128,6 +128,43 @@ def s3_connection():
         print("s3 bucket connected!") 
         return s3
 
+def load_AIModel(aiModel, filename):
+    """
+    DS 파트에서 작성된 데이터를 S3에 저장하는 함수
+    TODO sg : 더미 데이터(.txt) 파일로 테스트 진행
+
+    Parameters
+    ----------
+    aiModel : var(어떤 변수인지는 모르나 데이터인 것은 확실함)
+        DS 파트에서 작성된 데이터
+    filename : str
+        저장할 파일명
+
+    Returns
+    -------
+    None.
+    """
+
+    import common.compress_
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    if aiModel is None:
+        raise ValueError("aiModel is None")
+
+    directory = f'items/AIModel/{filename}.gz'    
+    compressed_data = common.compress_.compress(aiModel)
+
+    s3 = s3_connection()
+    aws_s3_bucket_name = os.environ.get('aws_s3_bucket_name')
+    s3.put_object(
+        Bucket = aws_s3_bucket_name,
+        Body = compressed_data,
+        Key = directory,
+    )
+
+
 def load(data, pummok): # 
     '''
     파티셔닝 후 저장하는 함수
@@ -138,21 +175,23 @@ def load(data, pummok): #
     from dotenv import load_dotenv
     load_dotenv()
 
-    if len(data) != 0:
-        year = data[0]['ADJ_DT'][0:4]
-        month = data[0]['ADJ_DT'][4:6]
-        date = data[0]['ADJ_DT']
+    if len(data) == 0 or data is None:
+        raise ValueError("data is None")
 
-        directory = f'items/{year}/{month}/{pummok}/{date}.json.gz' # TODO sg : 품목_등급으로 폴더명
-        compressed_data = gzip.compress(json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8'))
-        
-        s3 = s3_connection()
-        aws_s3_bucket_name = os.environ.get('aws_s3_bucket_name')
-        s3.put_object(
-            Bucket = aws_s3_bucket_name,
-            Body = compressed_data,
-            Key = directory,
-        )
+    year = data[0]['ADJ_DT'][0:4]
+    month = data[0]['ADJ_DT'][4:6]
+    date = data[0]['ADJ_DT']
+
+    directory = f'items/{year}/{month}/{pummok}/{date}.json.gz' # TODO sg : 품목_등급으로 폴더명
+    compressed_data = gzip.compress(json.dumps(data, ensure_ascii=False, indent=4).encode('utf-8'))
+    
+    s3 = s3_connection()
+    aws_s3_bucket_name = os.environ.get('aws_s3_bucket_name')
+    s3.put_object(
+        Bucket = aws_s3_bucket_name,
+        Body = compressed_data,
+        Key = directory,
+    )
 
 def etl_pipeline(date1, date2, pummok, DDD):
     from datetime import datetime, timedelta
